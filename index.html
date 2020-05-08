@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Renegade LIMS Watcher</title>
+    <title>DeCapper LIMS synchronizer</title>
+    <link href="styles.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Renegade LIMS Watcher</h1>
+    <div class="move top-bar"></div>
+    <div id="page-main" class="page">
+      <h3>DeCapper LIMS synchronizer</h3>
+      <a href="#settings">Settings</a>
+      <p>
+        <b>Status:</b> <span id="last-scan-time">Disconnected</span>
+      </p>
+      <p>
+        <b>Last scan:</b> <span id="last-scan-time">Never</span>
+      </p>
+    </div>
+
+    <div id="page-settings" class="page">
+      <h3>Settings</h3>
+      <a href="#main">Go back</a>
+    </div>
   </body>
   <script src="main.js"></script>
 </html>

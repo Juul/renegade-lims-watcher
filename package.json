@@ -3,17 +3,25 @@
   "main": "index.html",
   "version": "0.0.1",
   "scripts": {
-    "run": "./run.sh"
+    "run": "./run.sh",
+    "dist": "build --tasks win-x86,win-x64 --mirror https://dl.nwjs.io/ ."
   },
   "dependencies": {
     "chokidar": "^3.4.0",
-    "fs-extra": "^9.0.0"
+    "fs-extra": "^9.0.0",
+    "timeago.js": "^4.0.2"
   },
   "author": {
     "name": "Marc Juul",
     "email": "npm@juul.io",
     "url": "https://github.com/juul"
   },
-  "devDependencies": {},
-  "license": "AGPL-3.0"
+  "devDependencies": {
+    "nwjs-builder-phoenix": "^1.15.0"
+  },
+  "license": "AGPL-3.0",
+  "window": {
+    "frame": false,
+    "toolbar": false
+  }
 }

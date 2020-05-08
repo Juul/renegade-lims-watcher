@@ -35,14 +35,51 @@ function startWatching(watchPath) {
   });
 }
 
+function gotoPage(pageName) {
+  const pages = document.querySelectorAll('.page');
+  for(let page of pages) {
+    page.style.display = 'none';
+  }
+  const curPage = document.getElementById('page-'+pageName);
+  curPage.style.display = 'block';
+}
+
+function clickedLink(e) {
+  e.preventDefault();
+  var href = e.target.getAttribute('href');
+  if(!href) return;
+  var m = href.match(/^#(.*)/)
+  if(!m) return;
+
+  const pageName = m[1];
+  gotoPage(pageName);
+}
+
+function initLinks() {
+  const links = document.querySelectorAll('a');
+  var link, href, m;
+  for(link of links) {
+    href = link.getAttribute('href');
+    if(!href) continue;
+    m = href.match(/^#(.*)/)
+    if(!m) continue;
+    
+    link.addEventListener('click', clickedLink);
+  }
+  
+}
+
 if(settings.watchPath) {
   startWatching(settings.watchPath);
 }
-  
 
+//var notification = new Notification("Syncronizing...",options);
+//var notification = new Notification("DONE");
 
+ 
+var win = nw.Window.get();
+win.moveTo(0, 0);
+win.resizeTo(320, 240);
+win.setAlwaysOnTop(true);
 
-  
-
-
-
+initLinks();
