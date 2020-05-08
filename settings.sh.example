@@ -1,0 +1,3 @@
+
+# Path to directory where the nwjs SDK is installed
+NWJS_PATH=/opt/nwjs

@@ -1,0 +1,19 @@
+{
+  "name": "renegade-lims-watcher",
+  "main": "index.html",
+  "version": "0.0.1",
+  "scripts": {
+    "run": "./run.sh"
+  },
+  "dependencies": {
+    "chokidar": "^3.4.0",
+    "fs-extra": "^9.0.0"
+  },
+  "author": {
+    "name": "Marc Juul",
+    "email": "npm@juul.io",
+    "url": "https://github.com/juul"
+  },
+  "devDependencies": {},
+  "license": "AGPL-3.0"
+}
