@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeReaderDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.2">
+  <DocumentProperties>
+    <Application>Hamilton LabElite I.D. Reader 1.0.8</Application>
+    <Decoder>Version: "3.2.4"; Path: "C:\Program Files (x86)\Hamilton LabElite I.D. Capper\EasyCodeII\";</Decoder>
+    <DateCreated>2020-05-08T12:14:19.8713773-07:00</DateCreated>
+    <DecodeDuration>1.7906172</DecodeDuration>
+  </DocumentProperties>
+  <BatchID>41;1</BatchID>
+  <ProfileName>IDC_Standard_48_Rack</ProfileName>
+  <ErrorInfo>
+    <ErrorNumber>0</ErrorNumber>
+  </ErrorInfo>
+  <LabwareIdentification>
+    <FailureResultsList />
+  </LabwareIdentification>
+  <CodeIdentification>
+    <RackViewName>Standard 48 Rack</RackViewName>
+    <RackCode Error="0" PositionNumber="1" PositionText="Side_1D" CodeValue="G400067114" CodeType="Code 128" />
+    <CodeSettings>IDC_Standard_48_Rack</CodeSettings>
+    <Rack>
+      <RackId>1064</RackId>
+      <PictureFileName>easyCodeII_IDReader_00001064_Rack.png</PictureFileName>
+      <Error>0</Error>
+      <Description>41;1</Description>
+    </Rack>
+    <CodeGroups>
+      <CodeGroup Name="Side">
+        <CodeItems>
+          <Code Error="0" PositionNumber="1" PositionText="Side_1D" CodeValue="G400067114" CodeType="Code 128" />
+        </CodeItems>
+      </CodeGroup>
+      <CodeGroup Name="Tubes">
+        <CodeItems>
+          <Code Error="0" PositionNumber="1" PositionText="A1" CodeValue="G205411764" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="2" PositionText="A2" CodeValue="G205411766" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="3" PositionText="A3" CodeValue="G205411776" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="4" PositionText="A4" CodeValue="G205411742" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="5" PositionText="A5" CodeValue="G205411703" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="6" PositionText="A6" CodeValue="G205411734" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="7" PositionText="A7" CodeValue="G205411706" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="8" PositionText="A8" CodeValue="G205411694" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="9" PositionText="B1" CodeValue="G205411757" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="10" PositionText="B2" CodeValue="G205411716" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="11" PositionText="B3" CodeValue="G205411751" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="12" PositionText="B4" CodeValue="G205411720" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="13" PositionText="B5" CodeValue="G205411691" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="14" PositionText="B6" CodeValue="G205411697" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="15" PositionText="B7" CodeValue="G205411715" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="16" PositionText="B8" CodeValue="G205411725" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="17" PositionText="C1" CodeValue="G205411739" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="18" PositionText="C2" CodeValue="G205411735" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="19" PositionText="C3" CodeValue="G205411704" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="20" PositionText="C4" CodeValue="G205411710" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="21" PositionText="C5" CodeValue="G205411745" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="22" PositionText="C6" CodeValue="G205411754" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="23" PositionText="C7" CodeValue="G205411763" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="24" PositionText="C8" CodeValue="G205411727" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="25" PositionText="D1" CodeValue="G205411779" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="26" PositionText="D2" CodeValue="G205411698" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="27" PositionText="D3" CodeValue="G205411736" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="28" PositionText="D4" CodeValue="G205411719" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="29" PositionText="D5" CodeValue="G205411731" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="30" PositionText="D6" CodeValue="G205411729" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="31" PositionText="D7" CodeValue="G205411695" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="32" PositionText="D8" CodeValue="G205411721" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="33" PositionText="E1" CodeValue="G205411746" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="34" PositionText="E2" CodeValue="G205411707" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="35" PositionText="E3" CodeValue="G205411755" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="36" PositionText="E4" CodeValue="G205411699" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="37" PositionText="E5" CodeValue="G205411709" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="38" PositionText="E6" CodeValue="G205411714" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="39" PositionText="E7" CodeValue="G205411700" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="40" PositionText="E8" CodeValue="G205411702" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="41" PositionText="F1" CodeValue="G205411696" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="42" PositionText="F2" CodeValue="G205411705" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="43" PositionText="F3" CodeValue="G205411717" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="44" PositionText="F4" CodeValue="G205411693" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="45" PositionText="F5" CodeValue="G205411701" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="46" PositionText="F6" CodeValue="G205411738" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="47" PositionText="F7" CodeValue="G205411692" CodeType="Data Matrix ECC 200" />
+          <Code Error="0" PositionNumber="48" PositionText="F8" CodeValue="G205411726" CodeType="Data Matrix ECC 200" />
+        </CodeItems>
+      </CodeGroup>
+    </CodeGroups>
+  </CodeIdentification>
+  <RackTypeId>IDC_Standard_48_Rack</RackTypeId>
+  <RackOrientation>TopLeft</RackOrientation>
+  <RackOrientationRecoveryUsed>false</RackOrientationRecoveryUsed>
+</CodeReaderDocument>

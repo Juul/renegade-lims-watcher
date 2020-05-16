@@ -3,6 +3,20 @@
 const fs = require('fs-extra');
 const formatTime = require('timeago.js').format;
 const chokidar = require('chokidar');
+const minimist = require('minimist');
+const gui = require('nw.gui');
+
+const limsConnector = require('renegade-lims-connector');
+
+const argv = minimist(gui.App.argv, {
+  alias: {
+  },
+  boolean: [
+    'insecure' // don't validate TLS certs
+  ],
+  default: {
+  }
+});
 
 const SETTINGS_PATH = "./settings.json";
 
@@ -120,13 +134,15 @@ function updateLastScan(keepUpdating) {
 
 
 function writeScanData(data) {
+  
   // TODO
-
+  console.log("Got:", data);
+  
   lastScanTime = new Date();
   updateLastScan();
 }
 
-function parseNewFile(filepath, numTries) {
+function parseNewFile(filepath, numTries, cb) {
   openXML(filepath, function(err, doc) {
     if(err) {
       numTries = numTries || 0;
@@ -134,16 +150,66 @@ function parseNewFile(filepath, numTries) {
         showError("Failed to read file: " + filepath);
       }
       setTimeout(function() {
-        parseNewFile(filepath, numTries+1);
+        parseNewFile(filepath, numTries+1, cb);
       }, 3000);
       return;
     }
-
-    const el = doc.querySelector('Root > Foo');
-    const data = el.innerHTML.trim();
-    console.log("Got:", data);
     
-    writeScanData(data);
+    var o = {
+      parsedAt: (new Date()).getTime(),
+      wells: {}
+    };
+    
+    var el = doc.querySelector('CodeReaderDocument > DocumentProperties > DateCreated');
+    if(el) {
+      o.scannedAt = new Date(el.innerHTML);
+    }
+
+    el = doc.querySelector('CodeReaderDocument > ErrorInfo > ErrorNumber');
+    if(el) {
+      var errorNum = parseInt(el.innerHTML);
+      if(parseInt(el.innerHTML) !== 0) {
+        o.scanError = true;
+      }
+    }
+
+    el = doc.querySelector('CodeReaderDocument > CodeIdentification > RackCode');
+    if(!el) {
+      return cb(new Error("Rack barcode element not present"));
+    }
+    o.rackBarcode = el.getAttribute('CodeValue');
+    if(!o.rackBarcode) {
+      return cb(new Error("Rack barcode attribute not present"));
+    }
+    
+    var els = doc.querySelectorAll('CodeReaderDocument > CodeIdentification > CodeGroups > CodeGroup[Name=Tubes] > CodeItems > Code');
+    
+    var err, wellName, wellNumber, wellBarcode;
+    for(el of els) {
+      err = el.getAttribute('Error');
+      if(!err || parseInt(err) !== 0) continue;
+
+      wellName = el.getAttribute('PositionText');
+      if(!wellName) continue;
+      
+      wellNumber = el.getAttribute('PositionNumber');
+      if(!wellNumber) continue;
+
+      wellBarcode = el.getAttribute('CodeValue');
+      if(!wellBarcode) continue;
+
+      if(o.wells[wellName]) {
+        return cb(new Error("Saw two scan values for one well"));
+      }
+
+      o.wells[wellName] = {
+        wellName,
+        wellNumber,
+        barcode: wellBarcode
+      };
+    }
+
+    cb(null, o);
   });
 }
 
@@ -160,8 +226,17 @@ function startWatching(watchPath) {
 
     // give the decapper software some time to write the file
     setTimeout(function() {
-      parseNewFile(filepath);
-    }, 500);
+      
+      parseNewFile(filepath, null, function(err, data) {
+        if(err) {
+          // TODO display error in UI
+          console.error(err);
+          return;
+        }
+        
+        writeScanData(data)
+      });
+    }, 2000);
   });
 }
 
@@ -178,3 +253,32 @@ initLinks();
 
 updateLastScan(5000);
 
+function connect() {
+  var opts = {
+    host: settings.host,
+    port: settings.port,
+    insecure: argv.insecure,
+    tlsCert: fs.readFileSync(settings.tls.certPath),
+    tlsKey: fs.readFileSync(settings.tls.keyPath)
+  };
+
+  if(!argv.insecure) {
+    opts.serverTLSCert = fs.readFileSync(settings.tls.serverCertPath);
+  }
+  
+  limsConnector(opts, function(err, remote) {
+    if(remote) { // connected!
+      console.log("Connected!");
+    } else { // disconnected (after having been connected)
+      console.log("Disconnected", err);
+    }
+
+  });
+
+}
+
+try {
+  connect();
+} catch(e) {
+  console.error("Unable to connect:", e);
+}

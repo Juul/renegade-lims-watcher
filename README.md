@@ -15,9 +15,22 @@ First download the [NW.js SDK](https://nwjs.io/) and extract it, e.g. to `/opt/n
 ```
 npm install
 cp settings.sh.example settings.sh
+cp settings.json.example settings.json
 ```
 
-Edit `settings.sh` to suit your needs.
+Edit `settings.sh` and `settings.json` to suit your needs.
+
+## TLS certificates
+
+First generate your local certificates:
+
+```
+./scripts/gen_cert.sh
+```
+
+If you are using this locally on the same machine as `renegade-lims` then the hostname should probably just be `localhost`.
+
+Now copy the server's cert to `tls/server-cert.pem` and copy `tls/cert.pem` to the appropriate place on the server.
 
 # Running
 

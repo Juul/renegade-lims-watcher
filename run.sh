@@ -2,4 +2,4 @@
 
 source ./settings.sh
 
-${NWJS_PATH}/nw .
+${NWJS_PATH}/nw . $@

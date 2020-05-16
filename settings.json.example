@@ -1,0 +1,11 @@
+{
+  "watchPath": "/tmp/foo",
+  "syncedPath": "/tmp/foo/synced",
+  "host": "localhost",
+  "port": 4200,
+  "tls": {
+    "certPath": "tls/cert.pem",
+    "keyPath": "tls/key.pem",
+    "serverCertPath": "tls/server-cert.pem"
+  }
+}
