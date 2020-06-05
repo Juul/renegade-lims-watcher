@@ -100,6 +100,8 @@ function parseXML(str) {
 function openXML(filepath, cb) {
   fs.readFile(filepath, {encoding: 'utf8'}, function(err, data) {
     if(err) return cb(err);
+    // Strip Unicode Byte Order Mark (BOM) if present
+    data = data.replace(/^\uFEFF/, '');
     try {
       const doc = parseXML(data);
       cb(null, doc);
