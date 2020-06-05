@@ -1,13 +1,14 @@
 'use strict';
 
+const path = require('path');
 const fs = require('fs-extra');
+const async = require('async');
 const formatTime = require('timeago.js').format;
 const chokidar = require('chokidar');
 const minimist = require('minimist');
 const gui = require('nw.gui');
 
 const limsConnector = require('renegade-lims-connector');
-
 const argv = minimist(gui.App.argv, {
   alias: {
   },
@@ -18,8 +19,9 @@ const argv = minimist(gui.App.argv, {
   }
 });
 
-const SETTINGS_PATH = "./settings.json";
+const SETTINGS_PATH = "settings.json";
 
+var remote; // the remote rpc functions after we connect
 var lastScanTime;
 
 function saveSettings(settings) {
@@ -131,15 +133,51 @@ function updateLastScan(keepUpdating) {
   }
 }
 
+function setStatus(status) {
+  var el = document.getElementById('status');
+
+  el.innerHTML = status;
+}
 
 
-function writeScanData(data) {
+// Called on connect
+function reportAll() {
+
+  fs.readdir(settings.watchPath, function(err, files) {
+    async.eachSeries(function(filename, next) {
+      if(!filename.match(/\.xml$/i)) return next();
+
+      handeFile(path.join(settings.watchPath, filename), function(err) {
+        if(err) console.error(err);
+
+        next();
+      });
+    });
+  });
+}
+
+// move reported file away so it isn't reported again
+function moveFile(srcPath, cb) {
+  console.log("movefile called");
+  cb = cb || function(){};
+  var filename = path.basename(srcPath);
+  var destPath = path.join(settings.syncedPath, filename);
+  console.log("moveFile:", srcPath, destPath);
+  fs.move(srcPath, destPath, cb);
+}
+
+function reportScanData(data, cb) {
+  if(!remote) {
+    console.log("Not connected so not reporting data");
+    return cb();
+  }
   
-  // TODO
   console.log("Got:", data);
-  
+
   lastScanTime = new Date();
   updateLastScan();
+
+  remote.reportScan(data, cb);
 }
 
 function parseNewFile(filepath, numTries, cb) {
@@ -213,31 +251,41 @@ function parseNewFile(filepath, numTries, cb) {
   });
 }
 
+function handleFile(filepath, cb) {
+  console.log("File appeared:", filepath);
+
+  // give the decapper software some time to write the file
+  setTimeout(function() {
+    
+    parseNewFile(filepath, null, function(err, data) {
+      if(err) {
+        // TODO display error in UI
+        console.error(err);
+        return;
+      }
+      
+      reportScanData(data, function(err) {
+        if(err) {
+          // TODO display error in UI
+          console.error(err);
+          return;            
+        }
+        moveFile(filepath, cb);
+      });
+    });
+  }, 1000);
+}
+
 
 function startWatching(watchPath) {
   console.log("Watching:", watchPath);
   const watcher = chokidar.watch(watchPath, {
     persistent: true,
-    alwaysStat: true
+    alwaysStat: true,
+    depth: 0
   })
 
-  watcher.on('add', function(filepath, stats) {
-    console.log("filepath:", filepath);
-
-    // give the decapper software some time to write the file
-    setTimeout(function() {
-      
-      parseNewFile(filepath, null, function(err, data) {
-        if(err) {
-          // TODO display error in UI
-          console.error(err);
-          return;
-        }
-        
-        writeScanData(data)
-      });
-    }, 2000);
-  });
+  watcher.on('add', handleFile);
 }
 
 if(settings.watchPath) {
@@ -259,17 +307,22 @@ function connect() {
     port: settings.port,
     insecure: argv.insecure,
     tlsCert: fs.readFileSync(settings.tls.certPath),
-    tlsKey: fs.readFileSync(settings.tls.keyPath)
+    tlsKey: fs.readFileSync(settings.tls.keyPath),
+    debug: true
   };
 
   if(!argv.insecure) {
     opts.serverTLSCert = fs.readFileSync(settings.tls.serverCertPath);
   }
   
-  limsConnector(opts, function(err, remote) {
-    if(remote) { // connected!
+  limsConnector(opts, function(err, rem) {
+    if(rem) { // connected!
+      remote = rem;
       console.log("Connected!");
+      setStatus("Connected");
+      reportAll();
     } else { // disconnected (after having been connected)
+      remote = null;
       console.log("Disconnected", err);
     }
 

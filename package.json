@@ -7,12 +7,13 @@
     "dist": "build --tasks win-x86,win-x64 --mirror https://dl.nwjs.io/ ."
   },
   "dependencies": {
+    "async": "^3.2.0",
     "backoff": "^2.5.0",
     "chokidar": "^3.4.0",
     "fs-extra": "^9.0.0",
     "minimist": "^1.2.5",
-    "timeago.js": "^4.0.2",
-    "renegade-lims-connector": "git+https://github.com/renegadebio/renegade-lims-connector.git"
+    "renegade-lims-connector": "git+https://github.com/renegadebio/renegade-lims-connector.git",
+    "timeago.js": "^4.0.2"
   },
   "author": {
     "name": "Marc Juul",
