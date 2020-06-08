@@ -164,7 +164,7 @@ function setStatus(status) {
 
 // Called on connect
 function reportAll() {
-  
+
   fs.readdir(settings.watchPath, function(err, files) {
     async.eachSeries(files, function(filename, next) {
       if(!filename.match(/\.xml$/i)) return next();
@@ -274,6 +274,7 @@ function parseNewFile(filepath, numTries, cb) {
 }
 
 function handleFile(filepath, cb) {
+  cb = cb || function(){};
   console.log("File appeared:", filepath);
   hideError();
   setStatus("Reporting to LIMS");
@@ -284,21 +285,24 @@ function handleFile(filepath, cb) {
     parseNewFile(filepath, null, function(err, data) {
       if(err) {
         showError("Parse error: " + err.toString());
-        console.error(err);
-        return;
+        fs.move(filepath, path.join(settings.failedPath, path.basename(filepath)), function(err2) {
+          if(err2) console.error(err2);
+          console.error(err);
+          return cb(err);
+        });
       }
       
       reportScanData(data, function(err) {
         if(err) {
           showError("LIMS error: " + err.toString());
           console.error(err);
-          return;            
+          return cb(err);
         }
         moveFile(filepath, function(err) {
           if(err) {
             showError("File move error: " + err.toString());
             console.error(err);
-            return
+            return cb(err);
           }
           setStatus("Idle");
           cb();
@@ -310,17 +314,24 @@ function handleFile(filepath, cb) {
 
 
 function startWatching(watchPath) {
-  console.log("Watching:", watchPath);
-  const watcher = chokidar.watch(watchPath, {
-    persistent: true,
-    alwaysStat: true,
-    depth: 0
-  })
+  fs.ensureDir(settings.failedPath, function(err) {
+    if(err) {
+      alert("Failed to create: " + failedPath);
+      return;
+    }
+    console.log("Watching:", watchPath);
+    const watcher = chokidar.watch(watchPath, {
+      persistent: true,
+      alwaysStat: true,
+      depth: 0
+    })
 
-  watcher.on('add', handleFile);
+    watcher.on('add', handleFile);
+  });
 }
 
 if(settings.watchPath) {
+  settings.failedPath = settings.failedPath || path.join(settings.watchPath, 'failed');;
   startWatching(settings.watchPath);
 }
  
