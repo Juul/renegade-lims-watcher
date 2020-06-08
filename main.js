@@ -72,9 +72,14 @@ function initLinks() {
     if(!m) continue;
     
     link.addEventListener('click', clickedLink);
-  }
-  
+  }  
 }
+
+function initButtons() {
+  const retryBtn = document.getElementById('retry-button');
+  retryBtn.addEventListener('click', reportAll);
+}
+
 function capitalize(str) {
   if(!str) return;
 
@@ -111,7 +116,16 @@ function openXML(filepath, cb) {
   });
 }
 
+function hideError() {
+  setStatus("Idle");
+  var el = document.getElementById('error-msg');
+  el.innerHTML = '';
+  el = document.querySelector('.error');
+  el.style.display = "none";
+}
+
 function showError(err) {
+  setStatus("Error on last scan");
   var el = document.getElementById('error-msg');
   el.innerHTML = err.toString();
   el = document.querySelector('.error');
@@ -135,6 +149,12 @@ function updateLastScan(keepUpdating) {
   }
 }
 
+function setConnectStatus(status) {
+  var el = document.getElementById('connect-status');
+
+  el.innerHTML = status;
+}
+
 function setStatus(status) {
   var el = document.getElementById('status');
 
@@ -144,12 +164,12 @@ function setStatus(status) {
 
 // Called on connect
 function reportAll() {
-
+  
   fs.readdir(settings.watchPath, function(err, files) {
-    async.eachSeries(function(filename, next) {
+    async.eachSeries(files, function(filename, next) {
       if(!filename.match(/\.xml$/i)) return next();
 
-      handeFile(path.join(settings.watchPath, filename), function(err) {
+      handleFile(path.join(settings.watchPath, filename), function(err) {
         if(err) console.error(err);
 
         next();
@@ -165,7 +185,7 @@ function moveFile(srcPath, cb) {
   var filename = path.basename(srcPath);
   var destPath = path.join(settings.syncedPath, filename);
   console.log("moveFile:", srcPath, destPath);
-  fs.move(srcPath, destPath, cb);
+  fs.move(srcPath, destPath, {overwrite: true}, cb);
 }
 
 function reportScanData(data, cb) {
@@ -255,24 +275,34 @@ function parseNewFile(filepath, numTries, cb) {
 
 function handleFile(filepath, cb) {
   console.log("File appeared:", filepath);
-
+  hideError();
+  setStatus("Reporting to LIMS");
+  
   // give the decapper software some time to write the file
   setTimeout(function() {
     
     parseNewFile(filepath, null, function(err, data) {
       if(err) {
-        // TODO display error in UI
+        showError("Parse error: " + err.toString());
         console.error(err);
         return;
       }
       
       reportScanData(data, function(err) {
         if(err) {
-          // TODO display error in UI
+          showError("LIMS error: " + err.toString());
           console.error(err);
           return;            
         }
-        moveFile(filepath, cb);
+        moveFile(filepath, function(err) {
+          if(err) {
+            showError("File move error: " + err.toString());
+            console.error(err);
+            return
+          }
+          setStatus("Idle");
+          cb();
+        });
       });
     });
   }, 1000);
@@ -300,6 +330,7 @@ win.resizeTo(320, 240);
 win.setAlwaysOnTop(true);
 
 initLinks();
+initButtons();
 
 updateLastScan(5000);
 
@@ -321,11 +352,12 @@ function connect() {
     if(rem) { // connected!
       remote = rem;
       console.log("Connected!");
-      setStatus("Connected");
+      setConnectStatus("Connected");
       reportAll();
     } else { // disconnected (after having been connected)
       remote = null;
       console.log("Disconnected", err);
+      setConnectStatus("Disconnected");
     }
 
   });
